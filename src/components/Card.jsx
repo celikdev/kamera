@@ -12,6 +12,7 @@ const Card = ({
   setCameraName,
   cameraIP,
   setCameraIP,
+  cameraStatus,
   handleAdd,
   handleDelete,
   clearInputs,
@@ -30,7 +31,15 @@ const Card = ({
     >
       <div className="flex flex-col items-center w-full gap-2">
         <div>
-          <h1 className="font-Montserrat font-semibold text-sm">Kamera Ekle</h1>
+          {cardDeleteMode ? (
+            <h1 className="font-Montserrat font-semibold text-sm">
+              Kamera Bilgileri
+            </h1>
+          ) : (
+            <h1 className="font-Montserrat font-semibold text-sm">
+              Kamera Ekle
+            </h1>
+          )}
           <button
             onClick={() => clearInputs()}
             className="w-3 h-3 absolute top-4 right-4 transition-all hover:scale-110"
@@ -65,12 +74,21 @@ const Card = ({
         </h1>
       </div>
       {cardDeleteMode ? (
-        <button
-          onClick={() => handleDelete()}
-          className="border-2 transition-colors duration-300 text-red-600 hover:bg-red-600 hover:text-white hover:border-transparent border-red-600 px-10 py-0.5 rounded font-Montserrat font-semibold text-sm"
-        >
-          Sil
-        </button>
+        <>
+          <h1
+            className={`${
+              cameraStatus ? "text-green-400" : "text-red-600"
+            } font-Montserrat font-semibold text-sm`}
+          >
+            {cameraStatus ? "Kamera Aktif" : "Kamera Pasif"}
+          </h1>
+          <button
+            onClick={() => handleDelete()}
+            className="border-2 transition-colors duration-300 text-red-600 hover:bg-red-600 hover:text-white hover:border-transparent border-red-600 px-10 py-0.5 rounded font-Montserrat font-semibold text-sm"
+          >
+            Sil
+          </button>
+        </>
       ) : (
         <button
           onClick={() => handleAdd()}

@@ -7,12 +7,15 @@ import CameraGreen from "../assets/camera-green.svg";
 import { Card } from "./";
 
 const Map = () => {
+  const API_URL = "http://192.168.1.40:3000";
+
   const [dot, setDot] = useState({ xCoor: null, yCoor: null });
   const [cardVisibility, setCardVisibility] = useState(false);
   const [cardDeleteMode, setCardDeleteMode] = useState(false);
   const [cameraRotation, setCameraRotation] = useState(0);
   const [cameraName, setCameraName] = useState("");
   const [cameraIP, setCameraIP] = useState("");
+  const [cameraStatus, setCameraStatus] = useState(false);
 
   const [cameraData, setCameraData] = useState([]);
 
@@ -32,14 +35,14 @@ const Map = () => {
   };
 
   const getCameraData = () => {
-    axios.get("http://192.168.2.59:3000").then((res) => {
+    axios.get(API_URL).then((res) => {
       setCameraData(res.data);
     });
   };
 
-  const handleAdd = () => {
-    axios
-      .post("http://192.168.2.59:3000/", {
+  const handleAdd = async () => {
+    await axios
+      .post(API_URL, {
         cameraName,
         cameraCoordinate: { xCoor: dot.xCoor, yCoor: dot.yCoor },
         cameraIP,
@@ -52,12 +55,10 @@ const Map = () => {
   };
 
   const handleDelete = () => {
-    axios
-      .delete(`http://192.168.2.59:3000/${selectedCameraData._id}`)
-      .then((res) => {
-        clearInputs();
-        getCameraData();
-      });
+    axios.delete(`${API_URL}/${selectedCameraData._id}`).then((res) => {
+      clearInputs();
+      getCameraData();
+    });
   };
 
   const clearInputs = () => {
@@ -95,6 +96,7 @@ const Map = () => {
         setCameraName={setCameraName}
         cameraIP={cameraIP}
         setCameraIP={setCameraIP}
+        cameraStatus={cameraStatus}
         coorData={dot}
         handleAdd={handleAdd}
         handleDelete={handleDelete}
@@ -115,10 +117,11 @@ const Map = () => {
               setCameraName(camera.cameraName);
               setCameraIP(camera.cameraIP);
               setCameraRotation(camera.cameraRotation);
+              setCameraStatus(camera.cameraStatus);
             }}
-            src={CameraGreen}
+            src={camera.cameraStatus ? CameraGreen : CameraRed}
             alt="cameraGreen"
-            className="w-5 h-5 absolute cursor-pointer"
+            className="w-5 h-5 absolute cursor-pointer animate-pulse"
             style={{
               top: camera.cameraCoordinate.yCoor + "%",
               left: camera.cameraCoordinate.xCoor + "%",
