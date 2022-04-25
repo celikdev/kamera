@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import MapImage from "../assets/Harita.jpg";
 import CameraRed from "../assets/camera-red.svg";
@@ -23,6 +23,9 @@ const Map = () => {
 
   useEffect(() => {
     getCameraData();
+    setInterval(() => {
+      getCameraData();
+    }, 5 * 60 * 1000);
   }, []);
 
   const handleDot = (e) => {
